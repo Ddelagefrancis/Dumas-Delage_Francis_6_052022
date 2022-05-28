@@ -22,7 +22,7 @@ exports.modifySauce = (req, res, next) => {
             ...JSON.parse(req.body.sauce),
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         } : { ...req.body };
-        
+
     Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Sauce modifié !' }))
         .catch(error => res.status(400).json({ error }));
@@ -46,8 +46,9 @@ exports.deleteSauce = (req, res, next) => {
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => { res.status(200).json(sauce); })
-        .catch((error) => {res.status(404).json({ error });
-    });
+        .catch((error) => {
+            res.status(404).json({ error });
+        });
 };
 
 // Récupérer toutes les sauces
@@ -55,4 +56,78 @@ exports.getAllSauces = (req, res, next) => {
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }));
+};
+
+// Liker ou non une sauce
+exports.likeDislikeSauce = (req, res, next) => {
+    Sauce.findOne({ _id: req.params.id })
+        .then((sauce) => {
+            switch (req.body.like) {
+
+                // L'utilisateur aime la sauce
+                case 1:
+                    if (!sauce.usersLiked.includes(req.body.userId) && req.body.like === 1) {
+                        // on met a jour la BDD
+                        Sauce.updateOne({ _id: req.params.id },
+                            {
+                                $inc: { likes: 1 }, $push: { usersLiked: req.body.userId }
+                            })
+                            .then(() => {
+                                res.status(201).json({ message: "La sauce a été likée !" });
+                            })
+                            .catch((error) => {
+                                res.status(400).json({ error });
+                            });
+                    }
+                    break;
+
+                // Annulation du like par l'utilisateur
+                case 0:
+                    if (sauce.usersLiked.includes(req.body.userId)) {
+                        // on met a jour la BDD
+                        Sauce.updateOne({ _id: req.params.id },
+                            { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId }, }
+                        )
+                            .then(() => {
+                                res.status(201).json({ message: "Le like de la sauce a été annulé !" });
+                            })
+                            .catch((error) => {
+                                res.status(400).json({ error });
+                            });
+                    }
+                    // Annulation du dislike 
+                    if (sauce.usersDisliked.includes(req.body.userId)) {
+                        // on met a jour la BDD
+                        Sauce.updateOne({ _id: req.params.id },
+                            { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId }, }
+                        )
+                            .then(() => {
+                                res.status(201).json({ message: "Le dislike de la sauce a été annulé !" });
+                            })
+                            .catch((error) => {
+                                res.status(400).json({ error });
+                            });
+                    }
+                    break;
+
+                // L'utilisateur n'aime pas la sauce 
+                case -1:
+                    if (!sauce.usersDisliked.includes(req.body.userId) && req.body.like === -1) {
+                        // on met a jour la BDD
+                        Sauce.updateOne({ _id: req.params.id },
+                            { $inc: { dislikes: 1 }, $push: { usersDisliked: req.body.userId }, }
+                        )
+                            .then(() => {
+                                res.status(201).json({ message: "La sauce a été dislikée !" });
+                            })
+                            .catch((error) => {
+                                res.status(400).json({ error });
+                            });
+                    }
+                    break;
+            }
+        })
+        .catch((error) => {
+            res.status(404).json({ error });
+        });
 };

@@ -25,10 +25,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use((req, res, next) => {
-//     res.json({ message: 'Votre requête a bien été reçue !' });
-//     next();
-// });
 
 // Gestion des requêtes POST
 app.use(express.json());

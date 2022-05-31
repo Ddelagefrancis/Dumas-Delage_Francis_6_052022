@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
     password: { type: String, required: true }
 });
 
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator , { message: '{PATH} cet E-mail existe déjà!' });
 
 // on export le model avec le nom User
 module.exports = mongoose.model('User', userSchema);

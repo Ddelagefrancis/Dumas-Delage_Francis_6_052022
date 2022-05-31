@@ -8,7 +8,6 @@ const path = require('path');
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
-
 //  Connexion à la base de données
 mongoose.connect(process.env.CONNECT_DB,
     {
@@ -20,7 +19,8 @@ mongoose.connect(process.env.CONNECT_DB,
 
 const app = express();
 
-
+// Sets "Cross-Origin-Resource-Policy: cross-origin" sécurise nos en-têtes HTPP
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 // CORS Sécurise les en-têtes HTTP de notre app Express
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");

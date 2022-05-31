@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const path = require('path');
 
 const userRoutes = require('./routes/user');
@@ -18,6 +19,7 @@ mongoose.connect(process.env.CONNECT_DB,
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+app.use(helmet());
 
 // CORS Sécurise les en-têtes HTTP de notre app Express
 app.use((req, res, next) => {

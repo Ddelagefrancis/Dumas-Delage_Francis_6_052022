@@ -19,7 +19,7 @@ mongoose.connect(process.env.CONNECT_DB,
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
-app.use(helmet());
+
 
 // CORS Sécurise les en-têtes HTTP de notre app Express
 app.use((req, res, next) => {
@@ -35,6 +35,8 @@ app.use(express.json());
 
 // Serve static files
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use(helmet());
 
 // on recupere nos routes
 app.use('/api/auth', userRoutes);

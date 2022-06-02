@@ -19,7 +19,6 @@ exports.signup = (req, res, next) => {
 
 //  Utilisateur existant
 exports.login = (req, res, next) => { 
-    console.log('contenue du body ' + req.body);
     //  Trouver un utilisateur avec l'email
     User.findOne({ email: req.body.email })
     .then(user => {

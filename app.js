@@ -29,6 +29,34 @@ app.use((req, res, next) => {
     next();
 });
 
+// verification fonctionnement retour api sur port 3000
+// app.use('/api/sauce', (req, res, next) => {
+//     const sauce = [
+//         {
+//             _id: ("62992a3d165f88a55fbc"),
+//             userId: 'qsomihvqios',
+//             name: 'Ma premiere sauce',
+//             manufacturer: 'sauce industrie',
+//             description: 'Les infos de ma premiere sauce',
+//             imageUrl: 'https://...',
+//             heat: 8,
+//             likes: 1,
+//             dislikes: 2,
+//         },
+//         {
+//             _id: ("62992a3d165f88a55fbc"),
+//             userId: 'qsomihvqios',
+//             name: 'Ma seconde sauce',
+//             manufacturer: 'sauce industrie',
+//             description: 'Les infos de ma seconde sauce',
+//             imageUrl: 'https://...',
+//             heat: 5,
+//             likes: 3,
+//             dislikes: 1,
+//         },
+//     ];
+//     res.status(200).json(sauce);
+// });
 
 // Gestion des requêtes POST
 app.use(express.json());
